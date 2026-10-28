@@ -1,5 +1,5 @@
 /** Drop everything, re-run migrations and seed. Local/test databases only. */
-import "dotenv/config";
+import "@tidal/db/env";
 import postgres from "postgres";
 import { closeDb } from "@tidal/db";
 import { runMigrations } from "@tidal/db/migrate";

@@ -3,7 +3,7 @@
  * 50 fake contacts each"). Idempotent: fixed ids derived from stable keys, inserts skip existing rows.
  * Runs as trusted code (owner role).
  */
-import "dotenv/config";
+import "@tidal/db/env";
 import { createHash } from "node:crypto";
 import { faker } from "@faker-js/faker";
 import { sql } from "drizzle-orm";

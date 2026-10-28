@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "@tidal/db/env";
 import { closeDb } from "@tidal/db";
 import { resetDatabase } from "../src/scripts/reset";
 

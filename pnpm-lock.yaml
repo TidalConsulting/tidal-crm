@@ -10,6 +10,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@next/env':
+        specifier: 16.4.3
+        version: 16.4.3
       '@supabase/ssr':
         specifier: ^0.12.7
         version: 0.12.7(@supabase/supabase-js@2.118.0)
@@ -93,9 +96,6 @@ importers:
       '@types/node':
         specifier: ^22.20.5
         version: 22.20.5
-      dotenv:
-        specifier: ^18.0.9
-        version: 18.0.9
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -108,6 +108,9 @@ importers:
 
   packages/db:
     dependencies:
+      dotenv:
+        specifier: ^18.0.9
+        version: 18.0.9
       drizzle-orm:
         specifier: ^0.45.4
         version: 0.45.4(postgres@3.4.9)
@@ -118,9 +121,6 @@ importers:
       '@types/node':
         specifier: ^22.20.5
         version: 22.20.5
-      dotenv:
-        specifier: ^18.0.9
-        version: 18.0.9
       drizzle-kit:
         specifier: ^0.31.11
         version: 0.31.11

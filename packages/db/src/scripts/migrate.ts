@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "../env";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { fileURLToPath } from "node:url";
 import { closeDb, getDb } from "../client";

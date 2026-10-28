@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "@tidal/db/env";
 import { afterAll } from "vitest";
 import { closeDb, getDb, withSystem, withTenant, type Tx } from "@tidal/db";
 import { AGENCY_ID, locationId, userId } from "../src/scripts/seed";

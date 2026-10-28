@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "@tidal/db/env";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
