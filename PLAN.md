@@ -1,6 +1,21 @@
-# Tidal OS — Plan (awaiting approval)
+# Tidal OS — Plan
 
-This is the plan-mode output the master prompt asks for: stack decisions, folder structure, schema, and the phase 1 task list. **No application code exists yet.** Phase 1 starts once this is approved.
+Stack decisions, folder structure, schema and phase task lists. Approved Oct 28, 2026.
+
+## Status
+
+| Phase | Status |
+| --- | --- |
+| 1. Foundation | **Built, awaiting review**: see "Phase 1 as built" below |
+| 2. Core CRM | Not started; waits for phase 1 sign-off |
+| 3, 3.5, 4 | Not started |
+
+## Decisions (Oct 28)
+
+1. Stack approved: Drizzle, Supabase Auth (Google SSO), BullMQ.
+2. Build against a **local Postgres** for now. No hosted Supabase project yet. A new Google Sheet will be created and connected in phase 3.5.
+3. Agency admins see every sub-account automatically. The read-only **agency viewer** role is added.
+4. **No client portal** yet; `portal_users` isn't reserved.
 
 ## 1. Stack decisions
 
@@ -11,7 +26,7 @@ Where SPEC.md §4 gives two options, this plan picks one. Each pick can be chang
 | ORM | **Drizzle** | RLS policies, `SECURITY DEFINER` helpers and triggers are plain SQL. Drizzle keeps them in the same migration files as the tables, and it doesn't hide `set_config` / `set local role` the way Prisma's connection handling does. |
 | Auth | **Supabase Auth** with Google SSO, limited to the Workspace domain | RLS can use `auth.uid()` directly, and Supabase Realtime (live inbox, Kanban, dashboards) applies the same policies. With Clerk we'd need a JWT bridge on top. |
 | Jobs | **BullMQ on Redis**, in a separate `worker` process | SPEC §4 already plans a separate worker on Railway/Fly. Postgres `events` stays the source of truth. BullMQ only handles delivery, delays (wait nodes) and retries. |
-| Monorepo | **pnpm workspaces**: `apps/web`, `apps/worker`, `packages/db`, `packages/core` | The web app and worker share the schema and the service layer. |
+| Monorepo | **pnpm workspaces**: `apps/web`, `packages/db`, `packages/core` (`apps/worker` joins in phase 4) | The web app and worker share the schema and the service layer. |
 | Tests | **Vitest** against a real Postgres (local Supabase in Docker, or a plain Postgres 16 with an `auth` stub schema in CI) | You can't prove RLS with mocks. |
 | Charts (dashboards) | **Recharts** + **react-grid-layout** | Works with shadcn/ui, and react-grid-layout covers the drag/resize grid. |
 
@@ -107,9 +122,42 @@ These are the build steps for the Dashboards module in SPEC §6:
 
 Widget queries are a typed registry (`packages/core/metrics`). Each metric declares its source, the dimensions it supports and how to compute it from `metric_daily` (history) and live tables (today). The UI can only request registered metrics, so there is no ad-hoc SQL from the client.
 
-## 7. Questions before phase 1
+## 7. Phase 1 as built
 
-1. Are Drizzle, Supabase Auth and BullMQ (section 1) okay?
-2. Is there a Supabase project and Google Workspace domain to use, or should phase 1 run against local Supabase only until hosting is decided?
-3. Roles: should agency admins see every sub-account automatically (the plan assumes yes), and do we need a read-only "agency viewer" role for roll-up reporting?
-4. Should `portal_users` (SPEC §11 open question) be reserved now? The plan leaves it out until the client-portal question is answered.
+Acceptance (SPEC §9):
+
+- **"A user in GovPointe cannot see Gaia contacts"**: `packages/core/tests/isolation.test.ts` runs as the non-owner `app_user` role, so it tests the Postgres policies directly. It covers: reading pinned, unpinned and forged-pin; reading by id; inserting with a forged `location_id`; updating; moving a row to another tenant; hard delete; seeing Gaia's location, pipelines, users, memberships and dashboards; self-granting access; self-promotion. Guardrail tests fail if any table lacks RLS or the standard tenant policies, or if `app_user` can DELETE anything.
+- **"Switching sub-accounts changes every view"**: the tenant is in the URL (`/l/[locationId]/…`), and the switcher keeps you on the same module (`/l/A/contacts` → `/l/B/contacts`) and records `last_location_id`. Checked in a browser with Playwright.
+
+Task list:
+
+| # | Task | Result |
+| --- | --- | --- |
+| 1.1 | Monorepo scaffold | Done: pnpm workspaces, Next.js 16, Tailwind 4, TS strict, ESLint, Vitest. shadcn-style primitives are hand-written in `components/ui` (the shadcn CLI isn't needed for this set). |
+| 1.2 | Drizzle schema + first migration | Done: `0000_init.sql` (13 tables) |
+| 1.3 | RLS migration | Done: `0001_rls.sql`, with `app.location_ids()` / `app.agency_ids()` evaluated once per statement, `app.apply_tenant_policies()` for future tables, column-level update grants, no DELETE |
+| 1.4 | `withTenant` / `withSystem` / `recordChange` | Done: every service mutation writes `audit_log` + `events` in one transaction. `audit_log` is append-only by trigger. `events` inserts fire `pg_notify('events_new')` for the phase 4 worker. |
+| 1.5 | Auth | Done: `AUTH_MODE=dev` (signed cookie, seeded-user picker, refused in production) for local work. `AUTH_MODE=supabase` (Google SSO via `@supabase/ssr`, domain allowlist, invite→first-login re-keying) is wired but **untested until a Supabase project exists**. |
+| 1.6 | App shell + switcher | Done: sidebar in SPEC §8 order with phase badges, searchable keyboard-friendly switcher, light/dark/system theme, mobile module bar |
+| 1.7 | Agency view | Done: roll-up dashboard, sub-account list/create/edit/archive (create makes a Sales pipeline + default dashboard), team page (grant/change/remove access by email) |
+| 1.8 | Settings shell | Done: all 11 SPEC settings routes. Business profile (admin-editable) and Users (sub-account admins manage their members) are live; the rest are phase placeholders. |
+| 1.9 | Seed | Done and idempotent: Tidal agency, 7 sub-accounts, Sales + company-specific pipeline each, 50 contacts each, default dashboards, 6 test users covering every role |
+| 1.10 | Isolation tests | Done: 40 tests, stable under shuffled order |
+| 1.11 | CI | Done: `.github/workflows/ci.yml` (Postgres 16 service, lint, typecheck, test, build) |
+| 1.12 | CLAUDE.md | Done |
+
+Beyond the plan:
+
+- Read-only **Contacts** list (server-side search + pagination) and a phase 1 **Dashboard** (contacts, 30-day leads, leads by source, pipelines). Both are read-only, so isolation is visible in the UI. Editing, import and the widget dashboard are phase 2.
+- `agency_viewer` role (decision 3).
+
+Deferred, by design:
+
+- `apps/worker` and Redis: nothing consumes events until the workflow engine (phase 4). Events already queue up in `events` with `processed_at IS NULL`.
+- Snapshot picker on "New sub-account" is shown disabled until phase 4.
+- Global search, quick-add and notifications are shown disabled until phases 2–3.
+
+Known limits to revisit:
+
+- A sub-account admin can set `archived_at` on their own sub-account at the DB level. The UI only offers archive to agency admins.
+- `cacheComponents` (Next 16) is off on purpose. Every page is per-user, so caching gains little and risks serving one tenant's data to another.

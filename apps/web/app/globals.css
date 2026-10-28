@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* Dark when forced (.dark on <html>), or when the OS prefers dark and the user hasn't forced light. */
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not(.light), :root:not(.light) *) {
+      @slot;
+    }
+  }
+}
+
+:root {
+  --background: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #f1f3f6;
+  --foreground: #111827;
+  --muted: #6b7280;
+  --border: #e3e6eb;
+  --primary: #0e6e8c;
+  --primary-foreground: #ffffff;
+  --danger: #b42318;
+  --success: #067647;
+  --ring: #0e6e8c55;
+  --sidebar: #0f1d2b;
+  --sidebar-foreground: #c9d4df;
+  --sidebar-active: #1c3247;
+}
+
+.dark {
+  --background: #0b1118;
+  --surface: #111a24;
+  --surface-2: #17222e;
+  --foreground: #e6ebf0;
+  --muted: #8b98a6;
+  --border: #223140;
+  --primary: #3fb1d3;
+  --primary-foreground: #06202b;
+  --danger: #f97066;
+  --success: #47cd89;
+  --ring: #3fb1d355;
+  --sidebar: #070d13;
+  --sidebar-foreground: #aebccb;
+  --sidebar-active: #15263a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0b1118;
+    --surface: #111a24;
+    --surface-2: #17222e;
+    --foreground: #e6ebf0;
+    --muted: #8b98a6;
+    --border: #223140;
+    --primary: #3fb1d3;
+    --primary-foreground: #06202b;
+    --danger: #f97066;
+    --success: #47cd89;
+    --ring: #3fb1d355;
+    --sidebar: #070d13;
+    --sidebar-foreground: #aebccb;
+    --sidebar-active: #15263a;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-active: var(--sidebar-active);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+* {
+  border-color: var(--border);
+}
