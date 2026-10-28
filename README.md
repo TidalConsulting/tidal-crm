@@ -4,6 +4,8 @@ Internal multi-tenant CRM and marketing-automation platform for Tidal Consulting
 
 ## Run it locally
 
+A step-by-step guide with screenshots, written for non-developers, is in **[docs/launch-guide.pdf](docs/launch-guide.pdf)**. Its HTML source is in `docs/launch-guide/`.
+
 Requires Node 22, pnpm 10 and Postgres 16 (local install, or `docker compose up -d`).
 
 ```bash

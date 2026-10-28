@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tidal OS — Launch Guide</title>
+<style>
+  @page { size: Letter; margin: 0.65in 0.7in 0.75in; }
+  :root {
+    --ink: #111827; --muted: #5b6472; --line: #e3e6eb; --brand: #0e6e8c; --brand-soft: #e7f3f7;
+    --term-bg: #0f1d2b; --term-ink: #d7e2ec; --warn: #9a5b00; --warn-soft: #fff6e5;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: var(--ink); font: 10.5pt/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  h1, h2, h3 { line-height: 1.2; margin: 0; }
+  p { margin: 0 0 8pt; }
+  code { font: 9.5pt ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #f1f3f6; padding: 0 3pt; border-radius: 3pt; }
+  a { color: var(--brand); text-decoration: none; }
+
+  /* Cover */
+  .cover { height: 9.4in; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
+  .cover .mark { display: inline-grid; place-items: center; width: 34pt; height: 34pt; border-radius: 7pt; background: var(--brand); color: #fff; font-weight: 700; font-size: 17pt; }
+  .cover h1 { font-size: 34pt; letter-spacing: -0.02em; margin-top: 18pt; }
+  .cover .sub { font-size: 14pt; color: var(--muted); margin-top: 8pt; max-width: 5.2in; }
+  .cover .hero { border: 1px solid var(--line); border-radius: 8pt; overflow: hidden; margin-top: 22pt; }
+  .cover .hero img { display: block; width: 100%; }
+  .cover .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10pt; font-size: 9.5pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10pt; }
+  .cover .meta b { display: block; color: var(--ink); font-size: 10.5pt; }
+
+  /* Sections */
+  .part { font-size: 9pt; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brand); margin-bottom: 4pt; }
+  h2.title { font-size: 20pt; letter-spacing: -0.01em; margin-bottom: 10pt; }
+  .page { page-break-before: always; }
+  .step { display: grid; grid-template-columns: 26pt 1fr; gap: 10pt; margin: 0 0 14pt; break-inside: avoid; }
+  .num { width: 24pt; height: 24pt; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 11pt; }
+  .step h3 { font-size: 12.5pt; margin: 3pt 0 5pt; }
+  .step ul { margin: 0 0 8pt; padding-left: 14pt; }
+  .step li { margin-bottom: 3pt; }
+
+  .term { background: var(--term-bg); color: var(--term-ink); border-radius: 6pt; padding: 9pt 11pt; font: 9pt/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; margin: 4pt 0 8pt; break-inside: avoid; }
+  .term .p { color: #6fd0ee; user-select: none; }
+  .term .c { color: #7f93a6; }
+  .term .ok { color: #7ee2a8; }
+  .term-label { font-size: 8pt; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 6pt; }
+
+  .shot { width: 80%; margin: 6pt auto 4pt; border: 1px solid var(--line); border-radius: 6pt; overflow: hidden; break-inside: avoid; }
+  .shot img { display: block; width: 100%; }
+  .cap { font-size: 9pt; color: var(--muted); margin: 0 auto 12pt; width: 80%; }
+  .fig { margin: 0; break-inside: avoid; }
+  .shot.narrow { width: 58%; }
+  .shot.narrow + .cap { width: 58%; }
+
+  .note { border-left: 3pt solid var(--brand); background: var(--brand-soft); padding: 7pt 10pt; border-radius: 0 5pt 5pt 0; margin: 4pt 0 10pt; font-size: 9.8pt; break-inside: avoid; }
+  .warn { border-left-color: #d08a00; background: var(--warn-soft); }
+  .note b:first-child { display: block; margin-bottom: 2pt; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9.6pt; margin: 4pt 0 12pt; break-inside: auto; }
+  th, td { text-align: left; vertical-align: top; padding: 5pt 7pt; border-bottom: 1px solid var(--line); }
+  th { font-size: 8.5pt; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+  tr { break-inside: avoid; }
+
+  .toc { counter-reset: none; list-style: none; padding: 0; margin: 0; }
+  .toc li { display: flex; gap: 8pt; padding: 6pt 0; border-bottom: 1px solid var(--line); }
+  .toc .n { color: var(--brand); font-weight: 700; width: 20pt; }
+  .toc .d { color: var(--muted); margin-left: auto; font-size: 9.5pt; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+  .check { list-style: none; padding: 0; margin: 0; }
+  .check li { padding: 3pt 0 3pt 18pt; position: relative; }
+  .check li::before { content: "☐"; position: absolute; left: 0; color: var(--brand); }
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────── Cover ───────────────────────── -->
+<section class="cover">
+  <div>
+    <span class="mark">T</span>
+    <h1>Launching Tidal OS</h1>
+    <p class="sub">How to run the Tidal Consulting CRM on your own computer, step by step, with a short tour of what Phase 1 can do.</p>
+    <div class="hero"><img src="img/06-agency-dashboard.png" alt="Tidal OS agency dashboard"></div>
+  </div>
+  <div class="meta">
+    <div><b>Version</b>Phase 1 · Foundation</div>
+    <div><b>Time needed</b>About 20 minutes the first time</div>
+    <div><b>Date</b>October 28, 2026</div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Overview ───────────────────────── -->
+<section>
+  <div class="part">Before you start</div>
+  <h2 class="title">What you're launching</h2>
+  <p>Tidal OS is the internal, GoHighLevel-style CRM. Tidal Consulting is the <b>agency</b>, and each portfolio company (GovPointe, Gaia Homes, Honchar Auto, Honchar Remodeling, United Property Experts, FedFiles, TC Marketing) is a <b>sub-account</b> with its own data.</p>
+  <p>This guide runs the app <b>locally</b>, on your own computer, with a local database full of sample data. Nothing is on the internet yet. Hosting (Vercel + Supabase) and Google sign-in come once the team decides on hosting.</p>
+
+  <div class="note"><b>What works in Phase 1</b>Signing in, switching between sub-accounts, the agency dashboard, creating and archiving sub-accounts, giving people access, the business profile, and a read-only contact list. The database keeps each company's data separate. Modules marked <code>P2</code>–<code>P4</code> in the sidebar are placeholders for later phases.</div>
+
+  <h3 style="font-size:12.5pt;margin:14pt 0 6pt">Contents</h3>
+  <ul class="toc">
+    <li><span class="n">1</span>Install the tools<span class="d">Git, Node.js, pnpm, Docker</span></li>
+    <li><span class="n">2</span>Get the code<span class="d">Clone the repository</span></li>
+    <li><span class="n">3</span>Start the database<span class="d">One Docker command</span></li>
+    <li><span class="n">4</span>Create your settings file<span class="d"><code>.env</code></span></li>
+    <li><span class="n">5</span>Install, load sample data, start the app<span class="d">Three commands</span></li>
+    <li><span class="n">6</span>Sign in and take the tour<span class="d">Screens and what they do</span></li>
+    <li><span class="n">7</span>Day-to-day: stop, restart, reset<span class="d"></span></li>
+    <li><span class="n">8</span>Troubleshooting<span class="d">Common errors and fixes</span></li>
+  </ul>
+
+  <div class="note warn" style="margin-top:14pt"><b>Commands go in a terminal</b>On a Mac, open <b>Terminal</b> (⌘ + Space, type "Terminal"). On Windows, install <b>WSL</b> (Ubuntu) from the Microsoft Store and use its terminal; every command below works there unchanged. Type or paste each command after the <code>$</code> and press Return. Don't type the <code>$</code> itself.</div>
+</section>
+
+<!-- ───────────────────────── 1. Tools ───────────────────────── -->
+<section class="page">
+  <div class="part">Part 1</div>
+  <h2 class="title">Install the tools</h2>
+  <p>You only do this once per computer. If you already have a tool, check its version and skip it.</p>
+
+  <div class="step"><div class="num">1</div><div>
+    <h3>Git</h3>
+    <p>Downloads the code. On a Mac it's installed the first time you run <code>git</code>: macOS offers to install the "Command Line Developer Tools". Click <b>Install</b>. On Windows/WSL: <code>sudo apt install git</code>.</p>
+  </div></div>
+
+  <div class="step"><div class="num">2</div><div>
+    <h3>Node.js 22 (LTS)</h3>
+    <p>Runs the app. Download the <b>22.x LTS</b> installer from <a href="https://nodejs.org">nodejs.org</a> and run it. Phase 1 was built and tested on Node 22.</p>
+  </div></div>
+
+  <div class="step"><div class="num">3</div><div>
+    <h3>pnpm</h3>
+    <p>Installs the app's building blocks. Node ships with a helper that turns it on:</p>
+    <div class="term"><span class="p">$ </span>corepack enable</div>
+    <p>If that says "command not found", use <code>npm install -g pnpm@10</code> instead.</p>
+  </div></div>
+
+  <div class="step"><div class="num">4</div><div>
+    <h3>Docker Desktop</h3>
+    <p>Runs the database. Download it from <a href="https://www.docker.com/products/docker-desktop/">docker.com</a>, install it, and <b>open it once</b> so it's running (whale icon in the menu bar). On Windows, turn on "Use WSL 2" in its settings.</p>
+  </div></div>
+
+  <div class="step"><div class="num">5</div><div>
+    <h3>Check everything is installed</h3>
+    <div class="term"><span class="p">$ </span>git --version
+git version 2.x
+<span class="p">$ </span>node -v
+v22.x
+<span class="p">$ </span>pnpm -v
+10.x
+<span class="p">$ </span>docker --version
+Docker version 2x.x</div>
+    <p>Any version numbers at or above these are fine. If a command says "not found", reinstall that tool and open a <b>new</b> terminal window.</p>
+  </div></div>
+</section>
+
+<!-- ───────────────────────── 2–4 ───────────────────────── -->
+<section class="page">
+  <div class="part">Parts 2–4</div>
+  <h2 class="title">Get the code, start the database, add settings</h2>
+
+  <div class="step"><div class="num">6</div><div>
+    <h3>Download the code</h3>
+    <p>The repository is private, so you need access to <b>TidalConsulting/tidal-crm</b> on GitHub. Phase 1 is on a review branch until it's merged, so check that branch out:</p>
+    <div class="term"><span class="p">$ </span>git clone https://github.com/TidalConsulting/tidal-crm.git
+<span class="p">$ </span>cd tidal-crm
+<span class="p">$ </span>git checkout claude/epic-brown-qqamhc</div>
+    <p>If GitHub asks you to sign in, use your GitHub account. Once Phase 1 is merged, you can skip the <code>git checkout</code> line.</p>
+  </div></div>
+
+  <div class="step"><div class="num">7</div><div>
+    <h3>Start the database</h3>
+    <p>With Docker Desktop running, from inside the <code>tidal-crm</code> folder:</p>
+    <div class="term"><span class="p">$ </span>docker compose up -d
+<span class="c">…the first run downloads PostgreSQL, then ends with a line like</span>
+<span class="ok"> ✔ Container tidal-crm-postgres-1  Started</span></div>
+    <p>This starts PostgreSQL 16 in the background with two databases: <code>tidal</code> for the app and <code>tidal_test</code> for the automated tests. Your data survives restarts.</p>
+  </div></div>
+
+  <div class="step"><div class="num">8</div><div>
+    <h3>Create your settings file</h3>
+    <p>Copy the example file, then generate a random secret for signing people in:</p>
+    <div class="term"><span class="p">$ </span>cp .env.example .env
+<span class="p">$ </span>openssl rand -hex 32
+<span class="c">3f9c1e…(64 random characters)…a7d2</span></div>
+    <p>Open <code>.env</code> in any text editor (on a Mac: <code>open -e .env</code>). Replace <code>change-me-to-a-long-random-string</code> on the <code>SESSION_SECRET</code> line with the characters you just generated, and save. Leave everything else as it is.</p>
+    <div class="term"><span class="c"># .env (the lines that matter for a local launch)</span>
+DATABASE_URL=postgres://tidal:tidal@localhost:5432/tidal
+TEST_DATABASE_URL=postgres://tidal:tidal@localhost:5432/tidal_test
+AUTH_MODE=dev
+SESSION_SECRET=3f9c1e…a7d2</div>
+    <div class="note"><b>Keep <code>.env</code> private</b>It's never uploaded to GitHub (it's in <code>.gitignore</code>). <code>AUTH_MODE=dev</code> means "sign in by picking a test user". It only works on your computer, and the app refuses it on a production server.</div>
+  </div></div>
+</section>
+
+<!-- ───────────────────────── 5 ───────────────────────── -->
+<section style="margin-top:18pt">
+  <div class="part">Part 5</div>
+  <h2 class="title">Install, load sample data, start the app</h2>
+
+  <div class="step"><div class="num">9</div><div>
+    <h3>Install the app's packages</h3>
+    <div class="term"><span class="p">$ </span>pnpm install
+<span class="c">…</span>
+<span class="ok">Done in 12s</span></div>
+    <p>The first run downloads a few hundred megabytes and takes a minute or two. You may see "deprecated" or "Ignored build scripts" warnings. Those are harmless.</p>
+  </div></div>
+
+  <div class="step"><div class="num">10</div><div>
+    <h3>Build the database and load sample data</h3>
+    <div class="term"><span class="p">$ </span>pnpm db:reset
+<span class="c">&gt; tsx src/scripts/reset.ts</span>
+<span class="ok">reset complete { locations: 7, contacts: 350, users: 6 }</span></div>
+    <p>This creates every table and the security rules that keep each company's data separate. It then loads the agency, the 7 companies, two pipelines and 50 fake contacts per company, and 6 test users.</p>
+  </div></div>
+
+  <div class="step"><div class="num">11</div><div>
+    <h3>(Optional) Run the automated checks</h3>
+    <div class="term"><span class="p">$ </span>pnpm test
+<span class="ok"> ✓ tests/isolation.test.ts</span>
+<span class="ok"> ✓ tests/services.test.ts</span>
+<span class="ok"> Test Files  2 passed (2)</span>
+<span class="ok">      Tests  40 passed (40)</span></div>
+    <p>These 40 checks include the Phase 1 acceptance test: a GovPointe user cannot see, add to, change or delete Gaia Homes data. They only touch the separate test database.</p>
+  </div></div>
+
+  <div class="step"><div class="num">12</div><div>
+    <h3>Start the app</h3>
+    <div class="term"><span class="p">$ </span>pnpm dev
+▲ Next.js 16.4.3 (Turbopack)
+- Local:         http://localhost:3000
+<span class="ok">✓ Ready in 1.2s</span></div>
+    <p>Leave this terminal window open while you use the app. Then open <b><a href="http://localhost:3000">http://localhost:3000</a></b> in Chrome, Safari or Edge.</p>
+  </div></div>
+
+  <div class="note"><b>That's the launch.</b>The rest of this guide is a tour of the screens, plus what to do day to day and when something goes wrong.</div>
+</section>
+
+<!-- ───────────────────────── 6. Tour ───────────────────────── -->
+<section class="page">
+  <div class="part">Part 6</div>
+  <h2 class="title">Sign in and take the tour</h2>
+
+  <div class="step"><div class="num">13</div><div>
+    <h3>Pick a test user</h3>
+    <p>The sign-in page lists the sample users. Each one has a different level of access, so you can see the app the way each kind of person will:</p>
+  </div></div>
+  <figure class="fig"><div class="shot narrow"><img src="img/01-login.png" alt="Sign-in page listing six test users"></div>
+  <p class="cap">The local sign-in page. Once Google sign-in is turned on, this becomes a single "Continue with Google" button.</p></figure>
+
+  <table>
+    <tr><th>Sign in as</th><th>Can see</th><th>Can do</th></tr>
+    <tr><td><b>Avery Admin</b><br><code>admin@tidal.test</code></td><td>Every company + agency view</td><td>Everything: create companies, manage the team</td></tr>
+    <tr><td><b>Vic Viewer</b><br><code>viewer@tidal.test</code></td><td>Every company + agency view</td><td>Read only</td></tr>
+    <tr><td><b>Grant GovPointe Admin</b></td><td>GovPointe only</td><td>Edit GovPointe's profile and users</td></tr>
+    <tr><td><b>Gail GovPointe</b></td><td>GovPointe only</td><td>Day-to-day work in GovPointe</td></tr>
+    <tr><td><b>Gabe Gaia</b></td><td>Gaia Homes only</td><td>Day-to-day work in Gaia Homes</td></tr>
+    <tr><td><b>Hana Honchar</b></td><td>Honchar Auto + Honchar Remodeling</td><td>Admin of both</td></tr>
+  </table>
+  <p>To switch users, click your initials in the top-right corner and choose <b>Sign out</b>.</p>
+</section>
+
+<section class="page">
+  <div class="step"><div class="num">14</div><div>
+    <h3>The company dashboard</h3>
+    <p>After signing in you land on your company's dashboard: contact count, new leads in the last 30 days, leads by source, and that company's pipelines. The sidebar follows the GoHighLevel layout. Grey items marked <code>P2</code>–<code>P4</code> arrive in later phases.</p>
+  </div></div>
+  <figure class="fig"><div class="shot"><img src="img/02-dashboard.png" alt="GovPointe dashboard"></div>
+  <p class="cap">Signed in as Gail GovPointe. The fully customizable widget dashboard starts in Phase 2.</p></figure>
+
+  <div class="step"><div class="num">15</div><div>
+    <h3>Contacts</h3>
+    <p>A searchable, paged list of the company's contacts. Search by name, email or phone. Adding, editing and CSV import arrive in Phase 2.</p>
+  </div></div>
+  <figure class="fig"><div class="shot"><img src="img/03-contacts.png" alt="Contacts list"></div>
+  <p class="cap">50 sample contacts in GovPointe. Phone numbers are stored in international format and shown US-style.</p></figure>
+</section>
+
+<section class="page">
+  <div class="step"><div class="num">16</div><div>
+    <h3>Switch companies</h3>
+    <p>Sign in as <b>Avery Admin</b>. Click the company name at the top left, type to search, and press Return. You stay on the same screen (Contacts stays Contacts) for the new company, and the app remembers your choice for next time. Pick <b>Agency view</b> to see all companies at once.</p>
+  </div></div>
+  <figure class="fig"><div class="shot"><img src="img/05-switcher.png" alt="Sub-account switcher open"></div>
+  <p class="cap">The sub-account switcher. People only see the companies they have access to.</p></figure>
+
+  <div class="step"><div class="num">17</div><div>
+    <h3>See the data separation for yourself</h3>
+    <p>Signed in as <b>Gail GovPointe</b>, open a Gaia Homes page (for example by pasting a Gaia link an admin sent you). You get "Not found". The database itself refuses to return another company's records, so this protection doesn't rely on the screens being built correctly.</p>
+  </div></div>
+  <figure class="fig"><div class="shot narrow"><img src="img/04-isolation-404.png" alt="Not found page"></div>
+  <p class="cap">A GovPointe user trying to open Gaia Homes' contacts.</p></figure>
+</section>
+
+<section class="page">
+  <div class="step"><div class="num">18</div><div>
+    <h3>Agency dashboard</h3>
+    <p>For agency admins and viewers: totals across every company, and a row per company. Click a company name to jump into it.</p>
+  </div></div>
+  <figure class="fig"><div class="shot"><img src="img/06-agency-dashboard.png" alt="Agency dashboard"></div>
+  <p class="cap">Appointments, pipeline value and revenue join this roll-up as those modules ship.</p></figure>
+
+  <div class="step"><div class="num">19</div><div>
+    <h3>Add a company (sub-account)</h3>
+    <p>Agency view → <b>Sub-accounts</b>. Fill in the company name (legal name and time zone are optional) and click <b>Create sub-account</b>. It's ready right away, with a Sales pipeline and a dashboard. From the company's page you can also edit its details or <b>Archive</b> it (its data is kept).</p>
+  </div></div>
+  <figure class="fig"><div class="shot"><img src="img/07-new-sub-account.png" alt="New sub-account form"></div>
+  <p class="cap">Creating a new company takes under a minute. Templates ("snapshots") arrive in Phase 4.</p></figure>
+</section>
+
+<section class="page">
+  <div class="step"><div class="num">20</div><div>
+    <h3>Give someone access</h3>
+    <p>Agency view → <b>Team</b>. Enter their email, choose a <b>Scope</b> (the whole agency, or one company) and a <b>Role</b>, then click <b>Grant access</b>. Change or remove access from the list on the left. Company admins can do the same for their own company under <b>Settings → Users</b>.</p>
+  </div></div>
+  <figure class="fig"><div class="shot"><img src="img/08-team.png" alt="Team page"></div>
+  <p class="cap">Agency roles cover every company. Company roles cover one. Once Google sign-in is on, people sign in with the email you entered here.</p></figure>
+
+  <table>
+    <tr><th>Role</th><th>Scope</th><th>Meaning</th></tr>
+    <tr><td>Agency admin</td><td>All companies</td><td>Full control, including creating companies and managing the team</td></tr>
+    <tr><td>Agency viewer</td><td>All companies</td><td>Can look at everything, can't change anything</td></tr>
+    <tr><td>Sub-account admin</td><td>One company</td><td>Runs that company: settings, users, pipelines</td></tr>
+    <tr><td>User</td><td>One company</td><td>Day-to-day work: contacts, and later inbox and deals</td></tr>
+  </table>
+</section>
+
+<section class="page">
+  <div class="step"><div class="num">21</div><div>
+    <h3>Company settings</h3>
+    <p><b>Settings → Business profile</b> holds the company's display and legal name, phone, email, website, address and time zone. All times in that company are shown in its time zone. Only admins can save changes. Everyone else sees the form read-only.</p>
+  </div></div>
+  <figure class="fig"><div class="shot"><img src="img/09-business-profile.png" alt="Business profile settings"></div>
+  <p class="cap">The other settings pages (custom fields, tags, phone numbers, API keys…) are placeholders labelled with their phase.</p></figure>
+
+  <div class="step"><div class="num">22</div><div>
+    <h3>Light or dark</h3>
+    <p>Click your initials (top right) and choose <b>light</b>, <b>dark</b> or <b>system</b>.</p>
+  </div></div>
+  <div class="shot"><img src="img/10-dark.png" alt="Dark mode dashboard"></div>
+</section>
+
+<!-- ───────────────────────── 7. Day to day ───────────────────────── -->
+<section class="page">
+  <div class="part">Part 7</div>
+  <h2 class="title">Day-to-day: stop, restart, reset</h2>
+
+  <table>
+    <tr><th style="width:34%">I want to…</th><th>Do this</th></tr>
+    <tr><td>Stop the app</td><td>In the terminal running <code>pnpm dev</code>, press <b>Ctrl + C</b>.</td></tr>
+    <tr><td>Stop the database</td><td><code>docker compose stop</code> (your data is kept)</td></tr>
+    <tr><td>Start again later</td><td>Open Docker Desktop, then in the <code>tidal-crm</code> folder:<br><code>docker compose up -d</code> then <code>pnpm dev</code></td></tr>
+    <tr><td>Get the latest code</td><td><code>git pull</code>, then <code>pnpm install</code>, then <code>pnpm db:migrate</code></td></tr>
+    <tr><td>Start over with clean sample data</td><td><code>pnpm db:reset</code><br><b>This erases everything in the local database</b>, including companies and users you added.</td></tr>
+    <tr><td>Run the automated checks</td><td><code>pnpm test</code> (uses the separate test database, never your data)</td></tr>
+  </table>
+
+  <div class="part" style="margin-top:20pt">Part 8</div>
+  <h2 class="title">Troubleshooting</h2>
+  <table>
+    <tr><th style="width:38%">You see</th><th>Fix</th></tr>
+    <tr><td><code>Cannot connect to the Docker daemon</code></td><td>Docker Desktop isn't running. Open it, wait for the whale icon to settle, and try again.</td></tr>
+    <tr><td><code>port is already allocated</code> / <code>5432</code> in use</td><td>Another PostgreSQL is already running on your computer. Stop it (Mac: quit Postgres.app, or <code>brew services stop postgresql</code>), then run <code>docker compose up -d</code> again.</td></tr>
+    <tr><td><code>DATABASE_URL is not set</code></td><td>The <code>.env</code> file is missing from the <code>tidal-crm</code> folder. Redo step 8.</td></tr>
+    <tr><td><code>SESSION_SECRET must be set to at least 32 characters</code></td><td>The secret in <code>.env</code> wasn't replaced or is too short. Redo step 8.</td></tr>
+    <tr><td><code>ECONNREFUSED 127.0.0.1:5432</code></td><td>The database isn't running. Run <code>docker compose up -d</code>.</td></tr>
+    <tr><td>Sign-in page says "No users yet"</td><td>Run <code>pnpm db:reset</code> (step 10).</td></tr>
+    <tr><td><code>Port 3000 is in use</code></td><td>The app is already running in another terminal window. Use that one, or close it.</td></tr>
+    <tr><td><code>pnpm: command not found</code></td><td>Run <code>corepack enable</code> or <code>npm install -g pnpm@10</code>, then open a new terminal.</td></tr>
+    <tr><td>Anything else</td><td>Copy the full error text from the terminal and send it to whoever is building the app (or paste it into Claude Code).</td></tr>
+  </table>
+
+  <h3 style="font-size:12.5pt;margin:16pt 0 6pt">Quick-start checklist</h3>
+  <div class="grid2">
+    <ul class="check">
+      <li>Git, Node 22, pnpm, Docker installed</li>
+      <li>Docker Desktop open</li>
+      <li><code>git clone …</code> + <code>git checkout claude/epic-brown-qqamhc</code></li>
+      <li><code>docker compose up -d</code></li>
+    </ul>
+    <ul class="check">
+      <li><code>cp .env.example .env</code> + set <code>SESSION_SECRET</code></li>
+      <li><code>pnpm install</code></li>
+      <li><code>pnpm db:reset</code></li>
+      <li><code>pnpm dev</code> → open localhost:3000</li>
+    </ul>
+  </div>
+
+  <div class="note" style="margin-top:16pt"><b>Coming next</b>Putting Tidal OS online for the team needs a Supabase project (database + Google sign-in) and a Vercel account (web hosting). That's a separate, short guide once the accounts exist. Phase 2 adds editable contacts, companies, tags, CSV import, pipelines with a drag-and-drop board, and the customizable dashboard.</div>
+</section>
+
+</body>
+</html>
